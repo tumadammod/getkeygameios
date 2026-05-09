@@ -3,125 +3,184 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Get Key</title>
-
+<title>Get Key - Locked</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-  :root {
-    --bg: #0f1720;
-    --card: #1a2333;
-    --accent: #ffcc00;
-    --muted: #94a3b8;
-  }
-  body {
-    background: var(--bg);
-    font-family: "Segoe UI", sans-serif;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px 15px;
-  }
-  h1 {
-    color: var(--accent);
-    margin-bottom: 20px;
-    text-align: center;
-    line-height: 1.4;
-  }
-
-  .task {
-    background: var(--card);
-    padding: 14px 18px;
-    border-radius: 12px;
-    margin: 10px 0;
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-    box-shadow: 0 0 8px rgba(0,0,0,0.25);
-    transition: 0.25s;
-  }
-
-  button {
-    background: var(--accent);
-    color: black;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: 0.2s;
-  }
-
-  button:active {
-    transform: scale(0.96);
-  }
-
-  button:disabled {
-    background: #555;
-    color: #222;
-    cursor: not-allowed;
-  }
-
-  .hidden {
-    display: none;
-  }
+  :root { --bg-color: #f4f5f7; --card-bg: #ffffff; --text-main: #111827; --text-muted: #4b5563; --btn-task: #ef4444; --btn-task-disabled: #f87171; --btn-unlock: #86efac; --btn-unlock-active: #4ade80; --progress-bg: #e5e7eb; --progress-fill: #9ca3af; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background-color: var(--bg-color); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; position: relative;}
+  .card { background: var(--card-bg); width: 100%; max-width: 480px; border-radius: 20px; padding: 35px 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); text-align: center; }
+  h1 { color: var(--text-main); font-size: 26px; font-weight: 800; margin-bottom: 12px; }
+  .subtitle { color: var(--text-muted); font-size: 16px; margin-bottom: 30px; line-height: 1.5; }
+  .btn-task { background-color: var(--btn-task); color: white; border: none; border-radius: 14px; padding: 18px 24px; margin-bottom: 16px; width: 100%; display: flex; align-items: center; justify-content: space-between; font-size: 18px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25); }
+  .btn-task:active:not(:disabled) { transform: scale(0.97); }
+  .btn-task:disabled { background-color: var(--btn-task-disabled); box-shadow: none; opacity: 0.8; cursor: not-allowed; }
+  .btn-task.done { background-color: #10b981; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25); }
+  .btn-task i.icon-left { font-size: 22px; width: 28px; text-align: center; }
+  .progress-section { margin: 30px 0 25px 0; }
+  .progress-text { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
+  .progress-bar { width: 100%; height: 10px; background-color: var(--progress-bg); border-radius: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; width: 0%; background-color: var(--progress-fill); transition: width 0.4s ease; }
+  .unlock-group { display: flex; flex-direction: column; gap: 12px; }
+  .btn-unlock { background-color: var(--btn-unlock); color: white; border: none; border-radius: 14px; padding: 18px 24px; width: 100%; display: flex; align-items: center; justify-content: space-between; font-size: 18px; font-weight: 700; cursor: not-allowed; transition: all 0.3s ease; }
+  .btn-unlock.active { background-color: var(--btn-unlock-active); cursor: pointer; box-shadow: 0 4px 15px rgba(74, 222, 128, 0.4); }
+  .btn-unlock.active:active { transform: scale(0.97); }
+  
+  /* CSS Hướng dẫn & Popup */
+  .tutorial-section { margin-top: 35px; padding-top: 25px; border-top: 1px solid #e5e7eb; text-align: left; }
+  .tutorial-section h3 { font-size: 17px; color: var(--text-main); margin-bottom: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; justify-content: center; }
+  .tutorial-section h3 i { color: #3b82f6; }
+  .tutorial-buttons { display: flex; flex-direction: column; gap: 12px; }
+  .btn-tutorial { background-color: #f9fafb; color: #374151; border: 1px solid #d1d5db; border-radius: 12px; padding: 14px 20px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+  .btn-tutorial:hover { background-color: #f3f4f6; }
+  .btn-tutorial:active { transform: scale(0.98); }
+  .btn-tutorial i { color: #ef4444; font-size: 18px; }
+  
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(10, 10, 15, 0.9); z-index: 9999; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+  .modal-content { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 15px; animation: slideUp 0.3s ease-out; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  .modal-header { display: flex; justify-content: flex-end; }
+  .btn-close-top { background-color: rgba(255, 255, 255, 0.1); color: white; border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 16px; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+  .video-container { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 16px; overflow: hidden; background: #000; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+  .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+  .btn-close-bottom { background-color: #8b5cf6; color: white; border: none; border-radius: 14px; padding: 16px; font-size: 18px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); transition: transform 0.2s; }
+  .btn-close-bottom:active { transform: scale(0.97); }
 </style>
 </head>
 <body>
+<div class="card">
+  <h1>LQM iOS</h1>
+  <p class="subtitle">Hoàn thành các bước để mở khóa link, bạn chỉ mất 30 giây.</p>
+  
+  
+  <button class="btn-task" id="task1"  onclick="completeTask(1, 'https://youtu.be/JkzGq4mbkAA?si=XZ9oRTibJe9976Hq')">
+    <i class="fa-brands fa-youtube icon-left"></i>
+    <span id="text-task1">Bình Luận+Like Video</span>
+    <i class="fa-solid fa-angles-right icon-right" id="icon-task1"></i>
+  </button>
 
-<h1>🎯 Hoàn thành nhiệm vụ để mở khóa</h1>
+  <button class="btn-task" id="task2" disabled onclick="completeTask(2, 'https://t.me/tumadammod1')">
+    <i class="fa-brands fa-telegram icon-left"></i>
+    <span id="text-task2">Tham Gia Nhóm</span>
+    <i class="fa-solid fa-angles-right icon-right" id="icon-task2"></i>
+  </button>
 
-<div class="task">
-  <p><b>Bước 1:</b> Bình Luận Video</p>
-  <button id="task1" onclick="completeTask(1,'https://youtu.be/WeMkDVwsBTc?si=q17p9ybvRaFpaoj9')">Click</button>
+  <button class="btn-task" id="task3" disabled onclick="completeTask(3, 'https://www.youtube.com/@tumadamlengend')">
+    <i class="fa-brands fa-youtube icon-left"></i>
+    <span id="text-task3">Đăng Kí Kênh</span>
+    <i class="fa-solid fa-angles-right icon-right" id="icon-task3"></i>
+  </button>
+
+  <div class="progress-section">
+    <div class="progress-text" id="progressText">Tiến trình mở khoá 0/3</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div class="unlock-group">
+    
+    <button class="btn-unlock" id="unlockBtn1" disabled onclick="location.href='https://authtool.app/get-key?code=1bf10e70-67c3-4d06-b8ea-616806d60173'">
+      <i class="fa-solid fa-key" id="unlockIconLeft1"></i>
+      <span>Link Get Key Chính</span>
+      <i class="fa-solid fa-link" id="unlockIconRight1" style="opacity: 0.5;"></i>
+    </button>
+
+    <button class="btn-unlock" id="unlockBtn2" disabled onclick="location.href='https://authtool.app/get-key?code=60983695-9377-406f-a63a-0d58425512f5'">
+      <i class="fa-solid fa-key" id="unlockIconLeft2"></i>
+      <span>Link Getkey Phụ(Nếu link chính lỗi)</span>
+      <i class="fa-solid fa-link" id="unlockIconRight2" style="opacity: 0.5;"></i>
+    </button>
+  </div>
+
+  <div class="tutorial-section">
+    <h3><i class="fa-solid fa-circle-question"></i> Cần hỗ trợ?</h3>
+    <div class="tutorial-buttons">
+      <button onclick="openVideo('https://www.youtube.com/embed/kXjOfGHbkOU')" class="btn-tutorial">
+        <i class="fa-brands fa-youtube"></i> Hướng dẫn vượt link chính
+      </button>
+      <button onclick="openVideo('https://www.youtube.com/embed/Df_bP6sS7mc')" class="btn-tutorial">
+        <i class="fa-brands fa-youtube"></i> Hướng dẫn vượt link phụ
+      </button>
+    </div>
+  </div>
 </div>
 
-<div class="task hidden" id="task2box">
-  <p><b>Bước 2:</b> Like Video</p>
-  <button id="task2" onclick="completeTask(2,'https://youtu.be/WeMkDVwsBTc?si=q17p9ybvRaFpaoj9')">Click</button>
-</div>
-
-<div class="task hidden" id="task3box">
-  <p><b>Bước 3:</b> Join Group Telegram</p>
-  <button id="task3" onclick="completeTask(3,'https://t.me/tumadammod')">Click</button>
-</div>
-
-<div class="task hidden" id="unlockBox">
-  <p><b>🔓 Link Get Key</b></p>
-  <button onclick="location.href='https://v4.ppapikey.xyz/getlink?tokenID=163&username=tumadam'">Link Chính</button>
-  <br><br>
-    <button onclick="location.href='https://tumadam.io.vn/autoup/Huongdanvuotlink'">Hướng Dẫn Vượt Link(Nếu Chưa Biết)</button>
+<div id="videoModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="btn-close-top" onclick="closeVideo()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="video-container">
+      <iframe id="youtubeIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <button class="btn-close-bottom" onclick="closeVideo()">Đóng <i class="fa-solid fa-xmark"></i></button>
+  </div>
 </div>
 
 <script>
+let completedSteps = 0;
+const totalTasks = 3;
+
 function completeTask(step, url) {
-
   window.open(url, '_blank');
-
   const btn = document.getElementById(`task${step}`);
+  const textSpan = document.getElementById(`text-task${step}`);
+  const iconRight = document.getElementById(`icon-task${step}`);
+  
   btn.disabled = true;
-
+  btn.style.opacity = "1"; 
   let countdown = 3;
-  btn.textContent = `Đang kiểm tra... (${countdown})`;
+  textSpan.textContent = `Đang kiểm tra... (${countdown})`;
 
   const timer = setInterval(() => {
     countdown--;
     if (countdown > 0) {
-      btn.textContent = `Đang kiểm tra... (${countdown})`;
+      textSpan.textContent = `Đang kiểm tra... (${countdown})`;
     } else {
       clearInterval(timer);
-      btn.textContent = "✅ Hoàn thành";
+      btn.classList.add("done");
+      textSpan.textContent = "Đã hoàn thành";
+      iconRight.className = "fa-solid fa-check icon-right";
 
-      if (step < 3) {
-        document.getElementById(`task${step+1}box`).classList.remove("hidden");
+      completedSteps++;
+      document.getElementById("progressText").textContent = `Tiến trình mở khoá ${completedSteps}/${totalTasks}`;
+      document.getElementById("progressFill").style.width = `${(completedSteps / totalTasks) * 100}%`;
+
+      if (step < totalTasks) {
+        document.getElementById(`task${step + 1}`).disabled = false;
       } else {
-        document.getElementById("unlockBox").classList.remove("hidden");
+        
+          const unlockBtn1 = document.getElementById('unlockBtn1');
+          unlockBtn1.disabled = false;
+          unlockBtn1.classList.add("active");
+          document.getElementById('unlockIconLeft1').className = "fa-solid fa-lock-open";
+          document.getElementById('unlockIconRight1').style.opacity = "1";
+    
+          const unlockBtn2 = document.getElementById('unlockBtn2');
+          unlockBtn2.disabled = false;
+          unlockBtn2.classList.add("active");
+          document.getElementById('unlockIconLeft2').className = "fa-solid fa-lock-open";
+          document.getElementById('unlockIconRight2').style.opacity = "1";
+    
       }
     }
   }, 1000);
 }
+
+function openVideo(videoUrl) {
+  const modal = document.getElementById('videoModal');
+  const iframe = document.getElementById('youtubeIframe');
+  iframe.src = videoUrl + "?autoplay=1"; 
+  modal.style.display = 'flex';
+}
+
+function closeVideo() {
+  const modal = document.getElementById('videoModal');
+  const iframe = document.getElementById('youtubeIframe');
+  modal.style.display = 'none';
+  iframe.src = ''; 
+}
 </script>
-
-<script async src="//pl26947935.effectivegatecpm.com/a3/ff/2e/a3ff2eb3e4415ce00aed34eeedefbeee.js"></script>
-
+<script src="https://pl29364732.profitablecpmratenetwork.com/da/f6/98/daf6987d6edbf3e0420f161c4ad5fb78.js
+"></script>
 </body>
 </html>
