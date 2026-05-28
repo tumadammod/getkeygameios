@@ -313,6 +313,7 @@
 
   .bg-youtube { background-color: var(--red); }
   .bg-telegram { background-color: var(--blue-icon); }
+  .bg-tiktok { background-color: #000000; } /* Thêm dòng này để nền icon có màu đen của TikTok */
 
   .item-text {
     flex-grow: 1;
@@ -505,12 +506,12 @@
       <i class="fa-solid fa-chevron-right item-chevron" id="icon-task1"></i>
     </button>
 
-    <button class="ios-list-item" id="task2" disabled onclick="completeTask(2, 'https://youtu.be/JrVsqe4rXCc?si=fjxnakltnNsKgnAh')">
-      <div class="icon-box bg-youtube"><i class="fa-solid fa-thumbs-up"></i></div>
-      <span class="item-text" id="text-task2">Like Video</span>
-      <span class="item-status" id="status-task2"></span>
-      <i class="fa-solid fa-chevron-right item-chevron" id="icon-task2"></i>
-    </button>
+<button class="ios-list-item" id="task2" disabled onclick="completeTask(2, 'https://vt.tiktok.com/ZSxVXP3cX/')">
+  <div class="icon-box bg-tiktok"><i class="fa-brands fa-tiktok"></i></div>
+  <span class="item-text" id="text-task2">Tim +Bình Luận Video</span>
+  <span class="item-status" id="status-task2"></span>
+  <i class="fa-solid fa-chevron-right item-chevron" id="icon-task2"></i>
+</button>
 
     <button class="ios-list-item" id="task3" disabled onclick="completeTask(3, 'https://t.me/tumadammod1')">
       <div class="icon-box bg-telegram"><i class="fa-brands fa-telegram"></i></div>
