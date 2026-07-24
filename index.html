@@ -292,19 +292,12 @@
     <i class="fa-solid fa-lock" id="unlockIcon2"></i> Link Phụ (nếu Chính lỗi)
   </button>
 
-  <button class="btn-unlock style-ads pop-in delay-5" id="unlockBtn3" disabled onclick="goUnlock('ads')">
-    <i class="fa-solid fa-lock" id="unlockIcon3"></i> Link Ads (vượt quảng cáo)
-  </button>
-
   <div class="help-links pop-in delay-6">
     <button class="help-btn" onclick="openVideo(HD_VIDEOS.main)">
       <i class="fa-solid fa-circle-play"></i> Hướng dẫn vượt Link Chính
     </button>
     <button class="help-btn" onclick="openVideo(HD_VIDEOS.backup)">
       <i class="fa-solid fa-circle-play"></i> HD Vượt Link Phụ
-    </button>
-    <button class="help-btn help-btn-ads" onclick="openVideo(HD_VIDEOS.ads)">
-      <i class="fa-solid fa-circle-play"></i> HD Vượt link Quảng cáo
     </button>
   </div>
 
@@ -324,13 +317,11 @@
 const UNLOCK_LINKS = {
   main:   'https://authtool.app/get-key?code=1bf10e70-67c3-4d06-b8ea-616806d60173',
   backup: 'https://authtool.app/get-key?code=60983695-9377-406f-a63a-0d58425512f5',
-  ads:    'https://authtool.app/get-key?code=a9cfad07-ba38-4179-838a-d7786f69754b'   // <-- ads
 };
 
 const HD_VIDEOS = {
   main:   'https://pub-8851b5874408441f85670cfe38ce6aa7.r2.dev/video%20hd/copy_D9B62E8E-EDE2-422A-BFA6-266509F30DA8.mov',
   backup: 'https://pub-8851b5874408441f85670cfe38ce6aa7.r2.dev/video%20hd/copy_2EE117BF-E6DA-4062-9D5C-32CDF36812C8.mov',
-  ads:    'https://cdn.tumadam.com/files/91fb6774-04bb-4a64-8a8e-0ee5d688c9e5.mov'  // <-- video HD vượt link ads
 };
 /* =============================================================== */
 
